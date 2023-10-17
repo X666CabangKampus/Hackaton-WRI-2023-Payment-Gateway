@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend-hacktober/services/payment-gateway/flip"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +18,7 @@ func main() {
 	v1 := r.Group("/v1")
 	{
 		v1.GET("/callback-flip")
-		v1.POST("/callback-flip", CallbackHooks)
+		v1.POST("/callback-flip", flip.CallbackHooks)
 	}
 
 	fmt.Println("RUNNING SERVER...")
