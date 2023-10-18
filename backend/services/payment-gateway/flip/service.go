@@ -9,7 +9,3 @@ type Service struct {
 func (s Service) Service() {
 	s.idempotent = Idempotent{}
 }
-
-func ReqDisbursement() {
-
-}

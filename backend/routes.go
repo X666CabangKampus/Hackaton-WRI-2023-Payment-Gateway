@@ -17,8 +17,11 @@ func main() {
 
 	v1 := r.Group("/v1")
 	{
-		v1.GET("/callback-flip")
-		v1.POST("/callback-flip", flip.CallbackHooks)
+		rFlip := v1.Group("/flip")
+		{
+			rFlip.GET("/callback")
+			rFlip.POST("/callback", flip.AccPaymentCallback)
+		}
 	}
 
 	fmt.Println("RUNNING SERVER...")
