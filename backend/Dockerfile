@@ -10,4 +10,4 @@ RUN go mod tidy
 
 RUN go build -o main .
 
-ENTRYPOINT ["/app/main"]
+ENTRYPOINT ["./main"]
