@@ -18,6 +18,6 @@ jobs:
           key: ${{ secrets.SSH_PRIV_KEY }}
           port: 22
           script: |
-            cd ~/app/
+            cd ~/app/Hackaton-WRI-2023-Payment-Gateway
             git pull origin master
             git status
