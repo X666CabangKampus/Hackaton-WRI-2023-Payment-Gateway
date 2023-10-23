@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/imrenagi/go-payment/datastore/inmemory"
 	dssql "github.com/imrenagi/go-payment/datastore/sql"
@@ -10,7 +11,7 @@ import (
 	"github.com/imrenagi/go-payment/subscription"
 	"github.com/imrenagi/go-payment/util/localconfig"
 	"github.com/rs/zerolog/log"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -30,9 +31,12 @@ func NewSrv(router *gin.Engine) *Srv {
 		panic(err)
 	}
 
-	//dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable TimeZone=Asia/Jakarta", secret.DB.Host, secret.DB.UserName, secret.DB.Password, secret.DB.DBName, secret.DB.Port)
-	//db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	db, err := gorm.Open(sqlite.Open("conf/gorm.db"), &gorm.Config{})
+	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable TimeZone=Asia/Jakarta", secret.DB.Host, secret.DB.UserName, secret.DB.Password, secret.DB.DBName, secret.DB.Port)
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dsn,
+		PreferSimpleProtocol: true,
+	}), &gorm.Config{})
+	//db, err := gorm.Open(sqlite.Open("conf/gorm.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal().Msg(err.Error())
 	}
