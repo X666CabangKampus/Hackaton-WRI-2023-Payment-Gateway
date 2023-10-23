@@ -44,4 +44,4 @@ jobs:
             whoami
             sudo docker stop backend-payment-gateway-hackaton-wri-2023 || true && sudo docker rm backend-payment-gateway-hackaton-wri-2023 || true
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/backend-payment-gateway-hackaton-wri-2023:latest
-            sudo docker run -p 3000:3000 -d --name backend-payment-gateway-hackaton-wri-2023 ${{ secrets.DOCKER_USERNAME }}/backend-payment-gateway-hackaton-wri-2023:latest
+            sudo docker run -p 3000:3000 -d --name backend-payment-gateway-hackaton-wri-2023 ${{ secrets.DOCKER_USERNAME }}/backend-payment-gateway-hackaton-wri-2023:latest -w /app
