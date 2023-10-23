@@ -1,0 +1,23 @@
+name: CD
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  GO:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Deploy using SSH
+        uses: appleboy/ssh-action@master
+        with: 
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.UNAME }}
+          key: ${{ secrets.SSH_PRIV_KEY }}
+          port: 22
+          script: |
+            cd ~/app/
+            git pull origin master
+            git status
