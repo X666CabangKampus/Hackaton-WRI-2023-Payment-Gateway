@@ -32,6 +32,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Add support OpenSSH
+        run: |
+          echo "CASignatureAlgorithms +ssh-rsa" >> /etc/ssh/sshd_config
+          service ssh restart
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
