@@ -10,4 +10,6 @@ RUN go mod tidy
 
 RUN go build -o main .
 
+COPY conf/ /
+
 ENTRYPOINT ["./main"]
