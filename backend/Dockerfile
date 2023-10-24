@@ -6,10 +6,8 @@ WORKDIR /app
 
 COPY . .
 
-COPY ../conf/ /
-
 RUN go mod tidy
 
 RUN go build -o main .
 
-ENTRYPOINT ["./main"]
+ENTRYPOINT ["/app/main"]
