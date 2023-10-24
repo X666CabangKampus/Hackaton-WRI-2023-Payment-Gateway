@@ -42,12 +42,12 @@ func NewSrv(router *gin.Engine) *Srv {
 		db,
 		subscription.Schedule{},
 		subscription.Subscription{},
-		invoice.CreditCardDetail{},
+		invoice.Invoice{},
 		invoice.LineItem{},
 		midtrans.TransactionStatus{},
 		invoice.Payment{},
 		invoice.BillingAddress{},
-		invoice.Invoice{},
+		invoice.CreditCardDetail{},
 	)
 	if err != nil {
 		log.Fatal().Msg(err.Error())
