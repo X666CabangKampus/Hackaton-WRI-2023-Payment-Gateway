@@ -5,7 +5,7 @@ FROM golang:alpine AS builder
 
 run apk update && apk add --no-cache git
 
-WORKDIR /
+WORKDIR /go-build/
 
 COPY . .
 
@@ -23,7 +23,7 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /main /app/
-COPY --from=builder /conf/ /app/
+COPY --from=builder /go-build/conf/ /app/
 
 EXPOSE 8080
 
