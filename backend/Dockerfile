@@ -7,7 +7,7 @@ run apk update && apk add --no-cache git
 
 COPY . .
 
-RUN go get -d -v
+RUN go mod tidy
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /main .
 
