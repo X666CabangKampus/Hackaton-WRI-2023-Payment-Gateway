@@ -5,6 +5,8 @@ FROM golang:alpine AS builder
 
 run apk update && apk add --no-cache git
 
+WORKDIR /
+
 COPY . .
 
 RUN ls -la
