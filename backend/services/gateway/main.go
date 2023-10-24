@@ -36,18 +36,20 @@ func NewSrv(router *gin.Engine) *Srv {
 	if err != nil {
 		log.Fatal().Msg(err.Error())
 	}
-	db.AutoMigrate(
-		&subscription.Schedule{},
-		&subscription.Subscription{},
-		&midtrans.TransactionStatus{},
-		&invoice.CreditCardDetail{},
-		&invoice.LineItem{},
+
+	err = db.AutoMigrate(
+		subscription.Schedule{},
+		subscription.Subscription{},
+		invoice.CreditCardDetail{},
+		invoice.LineItem{},
+		midtrans.TransactionStatus{},
+		invoice.Payment{},
+		invoice.BillingAddress{},
+		invoice.Invoice{},
 	)
-	db.AutoMigrate(
-		&invoice.Payment{},
-		&invoice.BillingAddress{},
-		&invoice.Invoice{},
-	)
+	if err != nil {
+		log.Fatal().Msg(err.Error())
+	}
 
 	m := manage.NewManager(*config, secret.Payment)
 	m.MustMidtransTransactionStatusRepository(dssql.NewMidtransTransactionRepository(db))
