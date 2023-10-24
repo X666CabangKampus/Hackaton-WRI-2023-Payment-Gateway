@@ -1,4 +1,4 @@
-package Modules
+package modules
 
 import (
 	"bytes"
@@ -13,16 +13,16 @@ func SendActivationMail(incEmailTo string, incNameTo string, incOTPCode string) 
 	templateData := struct {
 		Name    string
 		Email   string
-		OTPCode string
+		Message string
 	}{
 		Name:    incNameTo,
 		Email:   incEmailTo,
-		OTPCode: incOTPCode,
+		Message: incOTPCode,
 	}
 
 	fmt.Println(os.Getwd())
 	var filepath = "./email.html"
-	r := newRequest([]string{incEmailTo}, "ACTIVATION OTP", "Hello, World!")
+	r := newRequest([]string{incEmailTo}, "INVOICE POLINEMA", "Hello, World!")
 	err := r.parseTemplate(filepath, templateData)
 
 	if err == nil {
