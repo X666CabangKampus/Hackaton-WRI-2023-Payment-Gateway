@@ -23,7 +23,7 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /main /app/
-COPY --from=builder /go-build/conf/ /app/
+COPY --from=builder /go-build/conf /app/
 
 EXPOSE 8080
 
