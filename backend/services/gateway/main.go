@@ -21,12 +21,12 @@ type Srv struct {
 }
 
 func NewSrv(router *gin.Engine) *Srv {
-	config, err := localconfig.LoadConfig("conf/config.yaml")
+	config, err := localconfig.LoadConfig("./conf/config.yaml")
 	if err != nil {
 		panic(err)
 	}
 
-	secret, err := localconfig.LoadSecret("conf/secret.yaml")
+	secret, err := localconfig.LoadSecret("./conf/secret.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +36,7 @@ func NewSrv(router *gin.Engine) *Srv {
 		DSN:                  dsn,
 		PreferSimpleProtocol: true,
 	}), &gorm.Config{})
-	//db, err := gorm.Open(sqlite.Open("conf/gorm.db"), &gorm.Config{})
+	//db, err := gorm.Open(sqlite.Open("./conf/gorm.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal().Msg(err.Error())
 	}
