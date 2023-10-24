@@ -42,6 +42,8 @@ func NewSrv(router *gin.Engine) *Srv {
 		&midtrans.TransactionStatus{},
 		&invoice.CreditCardDetail{},
 		&invoice.LineItem{},
+	)
+	db.AutoMigrate(
 		&invoice.Payment{},
 		&invoice.BillingAddress{},
 		&invoice.Invoice{},
