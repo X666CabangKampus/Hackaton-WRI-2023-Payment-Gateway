@@ -37,14 +37,16 @@ func NewSrv(router *gin.Engine) *Srv {
 		log.Fatal().Msg(err.Error())
 	}
 	db.AutoMigrate(
+		&subscription.Schedule{},
+		&subscription.Subscription{},
 		&midtrans.TransactionStatus{},
-		&invoice.Invoice{},
-		&invoice.Payment{},
 		&invoice.CreditCardDetail{},
 		&invoice.LineItem{},
+	)
+	db.AutoMigrate(
+		&invoice.Payment{},
 		&invoice.BillingAddress{},
-		&subscription.Subscription{},
-		&subscription.Schedule{},
+		&invoice.Invoice{},
 	)
 
 	m := manage.NewManager(*config, secret.Payment)
