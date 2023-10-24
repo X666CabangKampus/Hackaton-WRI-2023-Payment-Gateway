@@ -8,7 +8,7 @@ func AutoOrderedMigrate(db *gorm.DB, values ...interface{}) error {
 	for _, value := range values {
 		if !db.Migrator().HasTable(value) {
 			if err := db.Migrator().CreateTable(value); err != nil {
-				println()
+				println(value)
 				return err
 			}
 		}
