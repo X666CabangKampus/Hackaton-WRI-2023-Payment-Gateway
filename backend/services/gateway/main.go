@@ -1,6 +1,7 @@
 package gateway
 
 import (
+	util "backend-hacktober/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/imrenagi/go-payment/datastore/inmemory"
@@ -37,7 +38,8 @@ func NewSrv(router *gin.Engine) *Srv {
 		log.Fatal().Msg(err.Error())
 	}
 
-	err = db.AutoMigrate(
+	err = util.AutoOrderedMigrate(
+		db,
 		subscription.Schedule{},
 		subscription.Subscription{},
 		invoice.CreditCardDetail{},
