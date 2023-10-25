@@ -1,6 +1,8 @@
-package gateway
+package services
 
 import (
+	"backend-hacktober/services/gateway"
+	"backend-hacktober/services/user"
 	util "backend-hacktober/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -18,7 +20,8 @@ import (
 
 type Srv struct {
 	Router     *gin.Engine
-	PaymentSrv *Server
+	PaymentSrv *gateway.Server
+	UserSrv    *user.Server
 }
 
 func NewSrv(router *gin.Engine) *Srv {
@@ -48,6 +51,8 @@ func NewSrv(router *gin.Engine) *Srv {
 		invoice.Payment{},
 		invoice.BillingAddress{},
 		invoice.CreditCardDetail{},
+		user.User{},
+		user.UserTuitionFee{},
 	)
 	if err != nil {
 		log.Fatal().Msg(err.Error())
@@ -61,19 +66,14 @@ func NewSrv(router *gin.Engine) *Srv {
 
 	return &Srv{
 		Router:     router,
-		PaymentSrv: NewServer(m),
+		PaymentSrv: gateway.NewServer(m),
+		UserSrv:    user.NewServer(db),
 	}
 }
 
 func (S Srv) Routes() {
 	S.Router.GET("/payment/methods", S.PaymentSrv.GetPaymentMethodsHandler())
-	S.Router.POST("/payment/invoices", S.PaymentSrv.CreateInvoiceHandler())
+	S.Router.POST("/payment/invoices", user.MiddlewareJWT(S.PaymentSrv.CreateInvoiceHandler()))
 	S.Router.POST("/payment/midtrans/callback", S.PaymentSrv.MidtransTransactionCallbackHandler())
-	S.Router.POST("/payment/subscriptions", S.PaymentSrv.CreateSubscriptionHandler())
-	S.Router.POST("/payment/subscriptions/:subscription_number/pause", S.PaymentSrv.PauseSubscriptionHandler())
-	S.Router.POST("/payment/subscriptions/:subscription_number/stop", S.PaymentSrv.StopSubscriptionHandler())
-	S.Router.POST("/payment/subscriptions/:subscription_number/resume", S.PaymentSrv.ResumeSubscriptionHandler())
-	S.Router.PUT("/payment/subscriptions/:subscription_number/pause", S.PaymentSrv.PauseSubscriptionHandler())
-	S.Router.PUT("/payment/subscriptions/:subscription_number/stop", S.PaymentSrv.StopSubscriptionHandler())
-	S.Router.PUT("/payment/subscriptions/:subscription_number/resume", S.PaymentSrv.ResumeSubscriptionHandler())
+	S.Router.POST("/login", S.UserSrv.LoginHandler())
 }

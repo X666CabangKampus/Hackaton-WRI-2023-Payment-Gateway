@@ -4,6 +4,7 @@ go 1.21.3
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/imrenagi/go-payment v1.4.0
 	github.com/midtrans/midtrans-go v1.2.2
 	github.com/rs/zerolog v1.18.0
