@@ -1,19 +1,27 @@
 {
-  "name": "frontend-hacktoberfest",
-  "version": "1.0.0",
-  "description": "frontend of wri hacktoberfest 2023",
-  "main": "index.js",
+  "name": "payment-gateway",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/X666CabangKampus/Hacktoberfest2023-Payment-Gateway.git"
+  "dependencies": {
+    "react": "^18",
+    "react-dom": "^18",
+    "next": "13.5.5"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/X666CabangKampus/Hacktoberfest2023-Payment-Gateway/issues"
-  },
-  "homepage": "https://github.com/X666CabangKampus/Hacktoberfest2023-Payment-Gateway#readme"
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "postcss": "^8",
+    "tailwindcss": "^3",
+    "eslint": "^8",
+    "eslint-config-next": "13.5.5"
+  }
 }
