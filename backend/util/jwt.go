@@ -18,15 +18,16 @@ func CreateJWTSign(data *JWTStruct) (string, error) {
 }
 
 func ValidateJWTSign(token string) (*JWTStruct, error) {
-	var jwtStruct JWTStruct
-	tkn, err := jwt.ParseWithClaims(token, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
+	claims := jwt.MapClaims{}
+	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 		return JWT_SIGNATURE_KEY, nil
 	})
+
 	if err != nil {
 		return nil, err
 	}
-	if !tkn.Valid {
-		return nil, err
-	}
-	return &jwtStruct, nil
+
+	return &JWTStruct{
+		Username: claims["username"].(string),
+	}, nil
 }
