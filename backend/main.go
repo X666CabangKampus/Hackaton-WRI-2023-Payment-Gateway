@@ -10,7 +10,7 @@ func main() {
 
 	services.NewSrv(r).Routes()
 
-	err := r.Run("localhost:8080")
+	err := r.Run("0.0.0.0:8080")
 	if err != nil {
 		panic(err)
 	}
