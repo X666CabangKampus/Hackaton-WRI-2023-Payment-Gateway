@@ -11,18 +11,20 @@ type Model struct {
 
 type User struct {
 	Model
-	Username       string           `json:"username" gorm:"unique_index"`
+	Username       string           `json:"username" gorm:"unique"`
 	Password       string           `json:"password"`
-	FullName       string           `json:"-"`
-	TuitionFeeBase uint64           `json:"-"`
-	Tuition        []UserTuitionFee `json:"tuition"`
+	FullName       string           `json:"full_name"`
+	Email          string           `json:"email"`
+	Phone          string           `json:"phone"`
+	TuitionFeeBase uint64           `json:"tuition_fee_base"`
+	Tuition        []UserTuitionFee `json:"tuitions" gorm:"foreignkey:UserId;references:ID"`
 }
 
 type Semester uint
 
 type UserTuitionFee struct {
 	Model
-	UserId        uint64   `json:"user_id" gorm:"index:tuition_user_id_k"`
+	UserId        uint64   `json:"user_id" gorm:"index"`
 	SemesterPay   Semester `json:"semester_pay"`
 	InvoiceNumber string   `json:"invoice_number"`
 }

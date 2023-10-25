@@ -5,8 +5,8 @@ go 1.21.3
 require (
 	github.com/bradfitz/gomemcache v0.0.0-20230905024940-24af94b03874
 	github.com/gin-gonic/gin v1.9.1
-	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/gomodule/redigo v1.8.9
 	github.com/google/uuid v1.1.1
 	github.com/imrenagi/go-payment v1.4.0

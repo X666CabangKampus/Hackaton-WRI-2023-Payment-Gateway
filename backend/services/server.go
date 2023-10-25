@@ -2,6 +2,7 @@ package services
 
 import (
 	"backend-hacktober/services/gateway"
+	"backend-hacktober/services/middleware"
 	"backend-hacktober/services/user"
 	util "backend-hacktober/util"
 	"fmt"
@@ -73,7 +74,10 @@ func NewSrv(router *gin.Engine) *Srv {
 
 func (S Srv) Routes() {
 	S.Router.GET("/payment/methods", S.PaymentSrv.GetPaymentMethodsHandler())
-	S.Router.POST("/payment/invoices", user.MiddlewareJWT(S.PaymentSrv.CreateInvoiceHandler()))
+	S.Router.POST("/payment/invoices", middleware.MiddlewareJWT(S.PaymentSrv.CreateInvoiceHandler()))
 	S.Router.POST("/payment/midtrans/callback", S.PaymentSrv.MidtransTransactionCallbackHandler())
 	S.Router.POST("/login", S.UserSrv.LoginHandler())
+	S.Router.POST("/pay-tuition", middleware.MiddlewareJWT(S.UserSrv.PayTuitionHandler(S.PaymentSrv)))
+	S.Router.POST("/user/:pass", S.UserSrv.UserHandler())
+	S.Router.GET("/user/:pass", S.UserSrv.UserHandler())
 }
