@@ -4,11 +4,17 @@ import (
 	jwt "github.com/golang-jwt/jwt/v5"
 )
 
-var JWT_SIGNATURE_KEY = []byte("_22Y~!dOLlHEv8I@\",Wr(y(iar?RaBdt$j<@2u;^v2HymCC!H-$s1wt8S%^8CG6")
+const JWT_LENGTH_KEY = 32
+
+var JWT_SIGNATURE_KEY []byte
 var JWT_SIGNING_METHOD = jwt.SigningMethodHS256
 
 type JWTStruct struct {
 	Username string `json:"username"`
+}
+
+func init() {
+	JWT_SIGNATURE_KEY = []byte(GenRandomString(JWT_LENGTH_KEY))
 }
 
 func CreateJWTSign(data *JWTStruct) (string, error) {

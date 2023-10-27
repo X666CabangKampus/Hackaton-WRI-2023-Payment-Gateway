@@ -11,10 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
 
-      - name: Set up Config
-        run: |
-          echo "${{ secrets.CONF }}" > ./backend/conf/secret.yaml
-
       - name: connect to DockerHub
         uses: docker/login-action@v2
         with: 
@@ -48,4 +44,17 @@ jobs:
             whoami
             sudo docker stop backend-payment-gateway-hackaton-wri-2023 || true && sudo docker rm backend-payment-gateway-hackaton-wri-2023 || true
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/backend-payment-gateway-hackaton-wri-2023:latest
-            sudo docker run -p 8080:8080 -d -w /app --name backend-payment-gateway-hackaton-wri-2023 ${{ secrets.DOCKER_USERNAME }}/backend-payment-gateway-hackaton-wri-2023:latest
+            sudo docker run -p 8080:8080 -d -w /app --name backend-payment-gateway-hackaton-wri-2023 \
+            -e DB_HOST=${{ secrets.DB_HOST }} \
+            -e DB_PORT=${{ secrets.DB_PORT }} \
+            -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+            -e DB_NAME=${{ secrets.DB_NAME }} \
+            -e MIDTRANS_SECRET_KEY=${{ secrets.MIDTRANS_SECRET_KEY }} \
+            -e MIDTRANS_CLIENT_KEY=${{ secrets.MIDTRANS_CLIENT_KEY }} \
+            -e RABBIT_HOST=${{ secrets.RABBIT_HOST }} \
+            -e RABBIT_PORT=${{ secrets.RABBIT_PORT }} \
+            -e RABBIT_USERNAME=${{ secrets.RABBIT_USERNAME }} \
+            -e RABBIT_PASSWORD=${{ secrets.RABBIT_PASSWORD }} \
+            -e RABBIT_VHOST=${{ secrets.RABBIT_VHOST }} \
+            ${{ secrets.DOCKER_USERNAME }}/backend-payment-gateway-hackaton-wri-2023:latest
