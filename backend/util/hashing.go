@@ -1,4 +1,4 @@
-package signature
+package util
 
 import (
 	"crypto/sha256"

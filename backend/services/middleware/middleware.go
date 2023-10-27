@@ -2,7 +2,6 @@ package middleware
 
 import (
 	util "backend-hacktober/util"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -27,8 +26,6 @@ func MiddlewareJWT(handler MiddlewareHandlerFunc) gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, Error{StatusCode: http.StatusUnauthorized, Message: "Unauthorized"})
 			return
 		}
-
-		fmt.Println("Username: ", jwtS.Username)
 
 		handler(jwtS)(c)
 	}
