@@ -121,7 +121,10 @@ func (S Srv) MidtransTransactionCallbackWrapper() gin.HandlerFunc {
 func (S Srv) Routes() {
 	S.Router.GET("/payment/methods", S.PaymentSrv.GetPaymentMethodsHandler())
 	S.Router.POST("/payment/invoices", middleware.MiddlewareJWT(S.PaymentSrv.CreateInvoiceHandler()))
-	S.Router.POST("/payment/midtrans/callback", S.PaymentSrv.MidtransTransactionCallbackHandler())
+	S.Router.POST("/payment/midtrans/callback", S.MidtransTransactionCallbackWrapper())
+	S.Router.GET("/payment/midtrans/callback", func(context *gin.Context) {
+		util.WriteSuccessResponse(context, http.StatusOK, nil, nil)
+	})
 	S.Router.POST("/login", S.UserSrv.LoginHandler())
 	S.Router.POST("/tuition/pay", middleware.MiddlewareJWT(S.PayTuitionHandler()))
 	S.Router.GET("/tuition", middleware.MiddlewareJWT(S.UserSrv.GetTuitionHandler()))
