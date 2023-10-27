@@ -57,4 +57,5 @@ jobs:
             -e RABBIT_USERNAME=${{ secrets.RABBIT_USERNAME }} \
             -e RABBIT_PASSWORD=${{ secrets.RABBIT_PASSWORD }} \
             -e RABBIT_VHOST=${{ secrets.RABBIT_VHOST }} \
+            -e HASH_SECRET=${{ secrets.HASH_SECRET }} \
             ${{ secrets.DOCKER_USERNAME }}/backend-payment-gateway-hackaton-wri-2023:latest

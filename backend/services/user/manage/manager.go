@@ -36,7 +36,7 @@ func (m Manager) Login(loginReq LoginRequest) (*model.User, error) {
 		return nil, err
 	}
 
-	if user.Password != loginReq.Password {
+	if util.HashPassword(user.Password) != loginReq.Password {
 		return nil, nil
 	}
 
