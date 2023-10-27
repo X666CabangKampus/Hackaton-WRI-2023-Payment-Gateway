@@ -38,7 +38,7 @@ func (S Server) LoginHandler() gin.HandlerFunc {
 			util.WriteFailResponse(c, http.StatusBadRequest, util.Error{StatusCode: http.StatusBadRequest, Message: err.Error()})
 			return
 		}
-		c.SetCookie("JWT", signedJWT, 3600*24, "", "", true, true)
+		c.SetCookie("JWT", signedJWT, 3600*24, "/", "", false, true)
 
 		util.WriteSuccessResponse(c, http.StatusOK, user, map[string]string{})
 	}
