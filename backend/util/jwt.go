@@ -1,4 +1,4 @@
-package signature
+package util
 
 import (
 	jwt "github.com/golang-jwt/jwt/v5"

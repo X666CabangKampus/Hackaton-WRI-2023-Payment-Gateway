@@ -84,22 +84,27 @@ func (S Server) CreateInvoiceHandler() middleware.MiddlewareHandlerFunc {
 	}
 }
 
-func (S *Server) MidtransTransactionCallbackHandler() gin.HandlerFunc {
+func (S *Server) MidtransTransactionCallbackHandler(notificationRes ...*coreapi.TransactionStatusResponse) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var notification coreapi.TransactionStatusResponse
-		err := c.BindJSON(&notification)
-		if err != nil {
-			util.WriteFailResponse(c, http.StatusBadRequest, util.Error{
-				StatusCode: http.StatusBadRequest,
-				Message:    "Request can't be parsed",
-			})
-			return
+		var notification *coreapi.TransactionStatusResponse
+		if len(notificationRes) == 0 {
+			err := c.BindJSON(notification)
+			if err != nil {
+				util.WriteFailResponse(c, http.StatusBadRequest, util.Error{
+					StatusCode: http.StatusBadRequest,
+					Message:    "Request can't be parsed",
+				})
+				return
+			}
+		} else {
+			notification = notificationRes[0]
 		}
-		err = S.Manager.ProcessMidtransCallback(c.Copy(), &notification)
+		err := S.Manager.ProcessMidtransCallback(c, notification)
 		if err != nil {
 			WriteFailResponseFromError(c, err)
 			return
 		}
+
 		util.WriteSuccessResponse(c, http.StatusOK, util.Empty{}, nil)
 		return
 	}
