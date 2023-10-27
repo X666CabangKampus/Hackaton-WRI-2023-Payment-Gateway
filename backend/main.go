@@ -11,6 +11,9 @@ import (
 
 func getSecret() (*localconfig.Secret, error) {
 	secret, err := localconfig.LoadSecret("./conf/secret.yaml")
+	if secret == nil {
+		secret = &localconfig.Secret{}
+	}
 
 	if secret.DB.Host == "" || secret.DB.UserName == "" || secret.DB.Password == "" || secret.DB.DBName == "" || secret.DB.Port == 0 {
 		secret.DB.Host = os.Getenv("DB_HOST")
