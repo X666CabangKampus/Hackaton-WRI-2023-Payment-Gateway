@@ -22,6 +22,8 @@ FROM alpine:latest
 
 WORKDIR /app
 
+COPY --from=builder /usr/local/go/lib/time/ /usr/local/go/lib/time/
+
 COPY --from=builder /main /app/
 COPY --from=builder /go-build/conf/ /app/conf/
 
