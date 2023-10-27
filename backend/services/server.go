@@ -31,16 +31,7 @@ type Srv struct {
 	UserSrv    *srvUser.Server
 }
 
-func NewSrv(router *gin.Engine) *Srv {
-	config, err := localconfig.LoadConfig("./conf/config.yaml")
-	if err != nil {
-		panic(err)
-	}
-
-	secret, err := localconfig.LoadSecret("./conf/secret.yaml")
-	if err != nil {
-		panic(err)
-	}
+func NewSrv(router *gin.Engine, config *localconfig.Config, secret *localconfig.Secret) *Srv {
 
 	dsn := fmt.Sprintf("host=%v user=%v password=%v dbname=%v port=%v sslmode=disable TimeZone=Asia/Jakarta", secret.DB.Host, secret.DB.UserName, secret.DB.Password, secret.DB.DBName, secret.DB.Port)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
