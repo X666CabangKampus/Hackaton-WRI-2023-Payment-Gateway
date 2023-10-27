@@ -15,6 +15,7 @@ type JWTStruct struct {
 
 func init() {
 	JWT_SIGNATURE_KEY = []byte(GenRandomString(JWT_LENGTH_KEY))
+	print("JWT Signature Key: ", string(JWT_SIGNATURE_KEY))
 }
 
 func CreateJWTSign(data *JWTStruct) (string, error) {
@@ -24,16 +25,18 @@ func CreateJWTSign(data *JWTStruct) (string, error) {
 }
 
 func ValidateJWTSign(token string) (*JWTStruct, error) {
-	claims := jwt.MapClaims{}
-	_, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+	jwtToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		return JWT_SIGNATURE_KEY, nil
 	})
-
 	if err != nil {
 		return nil, err
 	}
 
-	return &JWTStruct{
-		Username: claims["username"].(string),
-	}, nil
+	if claims, ok := jwtToken.Claims.(jwt.MapClaims); ok && jwtToken.Valid {
+		return &JWTStruct{
+			Username: claims["username"].(string),
+		}, nil
+	} else {
+		return nil, err
+	}
 }
