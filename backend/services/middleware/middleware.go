@@ -18,6 +18,7 @@ func MiddlewareJWT(handler MiddlewareHandlerFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookie, err := c.Cookie("JWT")
 		if err != nil {
+			fmt.Println("Err: ", err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, Error{StatusCode: http.StatusUnauthorized, Message: "Unauthorized"})
 			return
 		}
