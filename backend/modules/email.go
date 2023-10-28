@@ -23,7 +23,7 @@ func SendActivationMail(data EmailData) {
 
 	fmt.Println(os.Getwd())
 	var filepath = "./conf/email.html"
-	r := newRequest([]string{data.Email}, fmt.Sprintf("Invoice [%s] for [%s] on [%s]", data.InvoiceNumber, data.Semester, data.DateTime), "Hello, World!")
+	r := newRequest([]string{data.Email}, fmt.Sprintf("Invoice [%s] for [%s] on [%s]", data.InvoiceNumber, "Tuition Payment", data.DateTime), "Hello, World!")
 	err := r.parseTemplate(filepath, data)
 
 	if err == nil {
