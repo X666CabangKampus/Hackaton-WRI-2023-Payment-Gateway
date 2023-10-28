@@ -128,7 +128,8 @@ func (S Srv) MidtransTransactionCallbackWrapper() gin.HandlerFunc {
 			data.ClientName = user.FullName
 			data.Status = message
 			data.DateTime = notification.TransactionTime
-			data.Amount = notification.GrossAmount
+			data.Amount = notification.PaymentAmounts[0].Amount
+			data.InvoiceNumber = notification.OrderID
 			modules.SendActivationMail(data)
 		}
 
