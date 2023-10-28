@@ -1,6 +1,9 @@
 package gateway
 
 import (
+	"backend-hacktober/services/middleware"
+	util "backend-hacktober/util"
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/imrenagi/go-payment/gateway/midtrans"
 	"github.com/imrenagi/go-payment/invoice"
@@ -50,103 +53,59 @@ func (S Server) GetPaymentMethodsHandler() gin.HandlerFunc {
 			WriteFailResponseFromError(c, err)
 			return
 		}
-		WriteSuccessResponse(c, http.StatusOK, methods, nil)
+		util.WriteSuccessResponse(c, http.StatusOK, methods, nil)
 	}
 }
 
-func (S Server) CreateInvoiceHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var req manage.GenerateInvoiceRequest
-		err := c.BindJSON(&req)
-		if err != nil {
-			WriteFailResponse(c, http.StatusBadRequest, Error{StatusCode: http.StatusBadRequest, Message: err.Error()})
-			return
+func (S Server) CreateInvoice(ctx context.Context, req *manage.GenerateInvoiceRequest) (*invoice.Invoice, error) {
+	inv, err := S.Manager.GenerateInvoice(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return inv, nil
+}
+
+func (S Server) CreateInvoiceHandler() middleware.MiddlewareHandlerFunc {
+	return func(jwtS *util.JWTStruct) gin.HandlerFunc {
+		return func(c *gin.Context) {
+			var req manage.GenerateInvoiceRequest
+			err := c.BindJSON(&req)
+			if err != nil {
+				util.WriteFailResponse(c, http.StatusBadRequest, util.Error{StatusCode: http.StatusBadRequest, Message: err.Error()})
+				return
+			}
+			inv, err := S.CreateInvoice(c.Copy(), &req)
+			if err != nil {
+				WriteFailResponseFromError(c, err)
+				return
+			}
+			util.WriteSuccessResponse(c, http.StatusOK, inv, nil)
 		}
-		inv, err := S.Manager.GenerateInvoice(c.Copy(), &req)
+	}
+}
+
+func (S *Server) MidtransTransactionCallbackHandler(notificationRes ...*coreapi.TransactionStatusResponse) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var notification *coreapi.TransactionStatusResponse
+		if len(notificationRes) == 0 {
+			err := c.BindJSON(notification)
+			if err != nil {
+				util.WriteFailResponse(c, http.StatusBadRequest, util.Error{
+					StatusCode: http.StatusBadRequest,
+					Message:    "Request can't be parsed",
+				})
+				return
+			}
+		} else {
+			notification = notificationRes[0]
+		}
+		err := S.Manager.ProcessMidtransCallback(c, notification)
 		if err != nil {
 			WriteFailResponseFromError(c, err)
 			return
 		}
-		WriteSuccessResponse(c, http.StatusOK, inv, nil)
-	}
-}
 
-func (S *Server) MidtransTransactionCallbackHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var notification coreapi.TransactionStatusResponse
-		err := c.BindJSON(&notification)
-		if err != nil {
-			WriteFailResponse(c, http.StatusBadRequest, Error{
-				StatusCode: http.StatusBadRequest,
-				Message:    "Request can't be parsed",
-			})
-			return
-		}
-		err = S.Manager.ProcessMidtransCallback(c.Copy(), &notification)
-		if err != nil {
-			WriteFailResponseFromError(c, err)
-			return
-		}
-		WriteSuccessResponse(c, http.StatusOK, Empty{}, nil)
+		util.WriteSuccessResponse(c, http.StatusOK, util.Empty{}, nil)
 		return
-	}
-}
-
-func (S Server) CreateSubscriptionHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var req manage.CreateSubscriptionRequest
-		err := c.BindJSON(&req)
-		if err != nil {
-			WriteFailResponse(c, http.StatusBadRequest, Error{StatusCode: http.StatusBadRequest, Message: err.Error()})
-			return
-		}
-		subs, err := S.Manager.CreateSubscription(c.Copy(), &req)
-		if err != nil {
-			WriteFailResponseFromError(c, err)
-			return
-		}
-		WriteSuccessResponse(c, http.StatusOK, subs, nil)
-	}
-}
-
-// PauseSubscriptionHandler returns handler for pausing subscription
-func (S Server) PauseSubscriptionHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var subscriptionNumber subscriptionUri
-		c.ShouldBindUri(&subscriptionNumber)
-		subs, err := S.Manager.PauseSubscription(c.Copy(), subscriptionNumber.SubscriptionNumber)
-		if err != nil {
-			WriteFailResponseFromError(c, err)
-			return
-		}
-		WriteSuccessResponse(c, http.StatusOK, subs, nil)
-	}
-}
-
-// StopSubscriptionHandler returns stop subscription handler
-func (S Server) StopSubscriptionHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var subscriptionNumber subscriptionUri
-		c.ShouldBindUri(&subscriptionNumber)
-		subs, err := S.Manager.StopSubscription(c.Copy(), subscriptionNumber.SubscriptionNumber)
-		if err != nil {
-			WriteFailResponseFromError(c, err)
-			return
-		}
-		WriteSuccessResponse(c, http.StatusOK, subs, nil)
-	}
-}
-
-// ResumeSubscriptionHandler returns resume susbcription handler
-func (S Server) ResumeSubscriptionHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var subscriptionNumber subscriptionUri
-		c.ShouldBindUri(&subscriptionNumber)
-		subs, err := S.Manager.ResumeSubscription(c.Copy(), subscriptionNumber.SubscriptionNumber)
-		if err != nil {
-			WriteFailResponseFromError(c, err)
-			return
-		}
-		WriteSuccessResponse(c, http.StatusOK, subs, nil)
 	}
 }
