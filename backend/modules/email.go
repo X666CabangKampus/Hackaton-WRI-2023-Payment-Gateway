@@ -21,7 +21,7 @@ func SendActivationMail(incEmailTo string, incNameTo string, incOTPCode string) 
 	}
 
 	fmt.Println(os.Getwd())
-	var filepath = "./email.html"
+	var filepath = "./conf/email.html"
 	r := newRequest([]string{incEmailTo}, "INVOICE POLINEMA", "Hello, World!")
 	err := r.parseTemplate(filepath, templateData)
 

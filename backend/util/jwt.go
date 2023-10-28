@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	jwt "github.com/golang-jwt/jwt/v5"
 )
 
@@ -15,7 +16,7 @@ type JWTStruct struct {
 
 func init() {
 	JWT_SIGNATURE_KEY = []byte(GenRandomString(JWT_LENGTH_KEY))
-	print("JWT Signature Key: ", string(JWT_SIGNATURE_KEY))
+	fmt.Println("JWT Signature Key: ", string(JWT_SIGNATURE_KEY))
 }
 
 func CreateJWTSign(data *JWTStruct) (string, error) {
