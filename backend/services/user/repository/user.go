@@ -92,3 +92,11 @@ func (u *UserRepository) GetTuitions(searched ...*model.UserTuitionFee) ([]*mode
 
 	return tuitions, nil
 }
+
+func (u *UserRepository) DeleteTuition(tuition *model.UserTuitionFee) error {
+	req := u.DB.Delete(tuition)
+	if req.Error != nil {
+		return req.Error
+	}
+	return nil
+}
