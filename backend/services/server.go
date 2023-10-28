@@ -111,7 +111,20 @@ func (S Srv) MidtransTransactionCallbackWrapper() gin.HandlerFunc {
 			return
 		}
 
-		modules.SendActivationMail(user.Email, user.FullName, "Your payment has been processed")
+		message := ""
+		if notification.TransactionStatus == "settlement" {
+			message = "Your payment has been processed"
+		} else if notification.TransactionStatus == "cancel" {
+			message = "Your payment has been canceled"
+			err = S.UserSrv.Manager.DeleteTuition(&model.UserTuitionFee{InvoiceNumber: notification.OrderID})
+			if err != nil {
+				log.Error().Msg(err.Error())
+				return
+			}
+		}
+		if message != "" {
+			modules.SendActivationMail(user.Email, user.FullName, message)
+		}
 
 		util.WriteSuccessResponse(c, http.StatusOK, nil, nil)
 	}

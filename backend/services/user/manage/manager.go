@@ -136,3 +136,7 @@ func (m Manager) GetUserFromInvoiceNumber(invoiceNumber string) (*model.User, er
 	}
 	return m.userRepository.GetUserByTuition(tuition[0])
 }
+
+func (m Manager) DeleteTuition(tuition *model.UserTuitionFee) error {
+	return m.userRepository.DeleteTuition(tuition)
+}

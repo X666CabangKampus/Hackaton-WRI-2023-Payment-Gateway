@@ -9,4 +9,5 @@ type UserRepository interface {
 	AddTuition(userTuition *model.UserTuitionFee) (*model.UserTuitionFee, error)
 	GetTuitions(searched ...*model.UserTuitionFee) ([]*model.UserTuitionFee, error)
 	GetUserByTuition(tuition *model.UserTuitionFee) (*model.User, error)
+	DeleteTuition(tuition *model.UserTuitionFee) error
 }
