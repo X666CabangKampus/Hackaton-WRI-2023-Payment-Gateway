@@ -3,6 +3,7 @@ package emailservice
 import (
 	"backend-hacktober/modules"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -36,14 +37,10 @@ var tps = 10
 var qosCount = 5
 
 func processTheMessage(queueMessage string) {
+	data := modules.EmailData{}
+	json.Unmarshal([]byte(queueMessage), &data)
 
-	mapQueueMessage := modules.ConvertJSONStringToMap("", queueMessage)
-
-	email := modules.GetStringFromMapInterface(mapQueueMessage, "email")
-	name := modules.GetStringFromMapInterface(mapQueueMessage, "name")
-	message := modules.GetStringFromMapInterface(mapQueueMessage, "message")
-
-	modules.SendActivationMail(email, name, message)
+	modules.SendActivationMail(data)
 }
 
 func processQueue() {

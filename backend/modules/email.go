@@ -8,22 +8,23 @@ import (
 	"text/template"
 )
 
-func SendActivationMail(incEmailTo string, incNameTo string, incOTPCode string) {
+type EmailData struct {
+	ClientName string `json:"name"`
+	Email string `json:"email"`
+	InvoiceNumber string `json:"invoice_number"`
+	Amount string `json:"amount"`
+	Status string `json:"status"`
+	Semester string `json:"semester"`
+	DateTime string `json:"date_time"`
+}
+
+func SendActivationMail(data EmailData) {
 	auth = smtp.PlainAuth("", "projectsuperapps@gmail.com", "xefolabosopgmcly", "smtp.gmail.com")
-	templateData := struct {
-		Name    string
-		Email   string
-		Message string
-	}{
-		Name:    incNameTo,
-		Email:   incEmailTo,
-		Message: incOTPCode,
-	}
 
 	fmt.Println(os.Getwd())
 	var filepath = "./conf/email.html"
-	r := newRequest([]string{incEmailTo}, "INVOICE POLINEMA", "Hello, World!")
-	err := r.parseTemplate(filepath, templateData)
+	r := newRequest([]string{data.Email}, fmt.Sprintf("Invoice [%s] for [%s] on [%s]", data.InvoiceNumber, data.Semester, data.DateTime), "Hello, World!")
+	err := r.parseTemplate(filepath, data)
 
 	if err == nil {
 		r.sendEmail()
