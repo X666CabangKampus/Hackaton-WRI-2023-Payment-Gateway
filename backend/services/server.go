@@ -123,7 +123,13 @@ func (S Srv) MidtransTransactionCallbackWrapper() gin.HandlerFunc {
 			}
 		}
 		if message != "" {
-			modules.SendActivationMail(user.Email, user.FullName, message)
+			data := modules.EmailData{}
+			data.Email = user.Email
+			data.ClientName = user.FullName
+			data.Status = message
+			data.DateTime = notification.TransactionTime
+			data.Amount = notification.GrossAmount
+			modules.SendActivationMail(data)
 		}
 
 		util.WriteSuccessResponse(c, http.StatusOK, nil, nil)
